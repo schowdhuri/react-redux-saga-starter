@@ -32,7 +32,7 @@ const TimeAdded = styled.div`
 `;
 TimeAdded.displayName = "TimeAdded";
 
-const Text = styled.p`
+const Text = styled.div`
     padding: 15px;
     font-size: 0.9em;
 `;
@@ -75,7 +75,7 @@ class Story extends React.Component {
                 {" | "}
                 <TimeAdded>{hoursAgo(story.time)}</TimeAdded>
             </Summary>
-            <Text>{story.text}</Text>
+            <Text dangerouslySetInnerHTML={{__html: story.text}} />
             <Comments>
                 {story.comments.map(comment => (<Comment key={comment.id}>
                     <CommentMeta>
@@ -83,7 +83,7 @@ class Story extends React.Component {
                         {" | "}
                         <TimeAdded>{hoursAgo(comment.time)}</TimeAdded>
                     </CommentMeta>
-                    <Text>{comment.text}</Text>
+                    <Text dangerouslySetInnerHTML={{__html: comment.text}} />
                 </Comment>))}
             </Comments>
         </Wrapper>;
