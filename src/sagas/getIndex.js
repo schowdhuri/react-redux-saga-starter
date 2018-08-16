@@ -14,27 +14,17 @@ async function getItem(id) {
     );
     return response.json;
 }
-async function getLatestItemId() {
-    const response = await request(
-        "https://hacker-news.firebaseio.com/v0/maxitem.json"
-    );
-    return response.json;
+async function getStories(storyType) {
+    const { url } = storyType;
+    const storyIds = await request(url);
+    const page = storyIds.json.slice(0, 10);
+    const pArr = page.map(getItem);
+    return await Promise.all(pArr);
 }
-function* getIndex() {
-    const stories = [];
+function* getIndex(action) {
     yield put(setLoading(GET_INDEX, true));
     try {
-        let id = yield call(getLatestItemId);
-        while(stories.length < 10) {
-            const item = yield call(getItem, id);
-            if(item && item.type === "story") {
-                stories.push(item);
-            }
-            if(item && item.parent)
-                id = item.parent;
-            else
-                id -= 1;
-        }
+        const stories = yield call(getStories, action.storyType);
         yield put(getIndexSuccess(stories));
     } catch(ex) {
         console.log(ex);

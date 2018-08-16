@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import hoursAgo from "../utils/hoursAgo";
+import Comments from "./Comments";
 
 const Wrapper = styled.div``;
 
@@ -33,29 +34,11 @@ const TimeAdded = styled.div`
 TimeAdded.displayName = "TimeAdded";
 
 const Text = styled.div`
-    padding: 15px;
+    padding: 15px 0;
     font-size: 0.9em;
 `;
 Text.displayName = "Text";
 
-const Comment = styled.div`
-    background: #f2f2f2;
-    border-radius: 4px;
-    margin-bottom: 10px;
-`;
-Comment.displayName = "Comment";
-
-const Comments = styled.div`
-
-`;
-Comments.displayName = "Comments";
-
-const CommentMeta = styled.div`
-    border-radius: 4px 4px 0 0;
-    background: #e3e3e4;
-    padding: 5px 15px;
-`;
-CommentMeta.displayName = "CommentMeta";
 
 class Story extends React.Component {
     componentDidMount() {
@@ -76,16 +59,7 @@ class Story extends React.Component {
                 <TimeAdded>{hoursAgo(story.time)}</TimeAdded>
             </Summary>
             <Text dangerouslySetInnerHTML={{__html: story.text}} />
-            <Comments>
-                {story.comments.map(comment => (<Comment key={comment.id}>
-                    <CommentMeta>
-                        <User>{comment.by}</User>
-                        {" | "}
-                        <TimeAdded>{hoursAgo(comment.time)}</TimeAdded>
-                    </CommentMeta>
-                    <Text dangerouslySetInnerHTML={{__html: comment.text}} />
-                </Comment>))}
-            </Comments>
+            <Comments comments={story.comments} />
         </Wrapper>;
     }
 }

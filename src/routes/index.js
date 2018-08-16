@@ -8,6 +8,7 @@ import StoryPage from "../pages/Story";
 export default () => (<Router history={history}>
     <Switch>
         <Route path="/" exact component={HomePage} />
-        <Route path="/:storyId" exact component={StoryPage} />
+        <Route path="/:storyType" exact component={HomePage} />
+        <Route path="/story/:storyId" exact component={StoryPage} />
     </Switch>
 </Router>);

@@ -49,8 +49,25 @@ const Discuss = styled(Link)`
 Discuss.displayName = "Discuss";
 
 class List extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            storyType: null
+        };
+    }
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if(nextProps.storyType !== prevState.storyType) {
+            return { storyType: nextProps.storyType };
+        } else {
+            return null;
+        }
+    }
     componentDidMount() {
-        this.props.getIndex();
+        this.props.getIndex(this.state.storyType);
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.storyType !== this.state.storyType)
+            this.props.getIndex(this.state.storyType);
     }
     render() {
         const { stories } = this.props;
@@ -63,7 +80,7 @@ class List extends React.Component {
                     {" | "}
                     <TimeAdded>{hoursAgo(story.time)}</TimeAdded>
                     {" | "}
-                    <Discuss to={`/${story.id}`}>Discuss</Discuss>
+                    <Discuss to={`/story/${story.id}`}>Discuss</Discuss>
                 </Summary>
             </Story>)}
         </Wrapper>;

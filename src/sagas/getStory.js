@@ -12,7 +12,13 @@ async function getItem(id) {
     const response = await request(
         `https://hacker-news.firebaseio.com/v0/item/${id}.json`
     );
-    return response.json;
+    const story = response.json;
+    if(story && story.kids) {
+        const pArr = story.kids.map(getItem);
+        const comments = await Promise.all(pArr);
+        story.comments = comments;
+    }
+    return story;
 }
 
 function* getStory(action) {
@@ -20,12 +26,12 @@ function* getStory(action) {
     try {
         const { id } = action;
         const story = yield call(getItem, id);
-        const pArr = story.kids.map(getItem);
-        const comments = yield all(pArr);
-        yield put(getStorySuccess({
-            ...story,
-            comments
-        }));
+        if(story.kids) {
+            const pArr = story.kids.map(getItem);
+            const comments = yield all(pArr);
+            story.comments = comments;
+        }
+        yield put(getStorySuccess(story));
     } catch(ex) {
         console.log(ex);
         yield put(getStoryError(ex));
